@@ -7,6 +7,7 @@ This guide covers the essential security hardening and configuration steps to pe
 2. [SSH Key Setup](#ssh-key-setup)
 3. [Security Hardening](#security-hardening)
 4. [Automatic Security Updates](#automatic-security-updates)
+4. [Enable Two Factor Login](#enable-two-factor-login)
 
 ---
 
@@ -85,3 +86,13 @@ systemctl enable unattended-upgrades
 
 ### Monitoring
 Monitor `/var/log/unattended-upgrades/unattended-upgrades.log` for failures.
+
+---
+
+## Enable Two Factor Login
+
+On Promox UI go to:
+```
+Datacenter -> Two Factor -> Add
+```
+Follow the instructions to configure TOTP login using Google Authenticator
