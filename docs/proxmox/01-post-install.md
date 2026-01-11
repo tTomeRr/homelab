@@ -38,7 +38,7 @@ cat ~/.ssh/proxmox.pub  # Copy this output
 ### Run Security Script
 ```bash
 ssh root@<proxmox-ip>
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/tTomeRr/homelab/main/proxmox/post-install-script.sh -o post-install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/tTomeRr/homelab/main/infrastructure/proxmox/post-install-script.sh -o post-install.sh)"
 ```
 
 **Steps**:
