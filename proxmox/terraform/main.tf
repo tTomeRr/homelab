@@ -14,52 +14,30 @@ provider "proxmox" {
   pm_tls_insecure     = true
 }
 
-resource "proxmox_vm_qemu" "k3s_master" {
-  name        = "k3s-master"
-  target_node = var.proxmox_node
-  clone       = var.template_name
-  agent       = 1
-  os_type     = "cloud-init"
-
-  cpu {
-    cores = 2
-    type  = "host"
-  }
-  memory = 4096
-
-  boot = "order=virtio0"
-
-  disks {
-    virtio {
-      virtio0 {
-        disk {
-          storage = var.storage_name
-          size    = 40
-        }
-      }
+locals {
+  k3s_vms = {
+    "k3s-master" = {
+      memory    = 4096
+      disk_size = 40
+      ip        = "192.168.100.110"
     }
-    ide {
-      ide3 {
-        cloudinit {
-          storage = var.storage_name
-        }
-      }
+    "k3s-worker01" = {
+      memory    = 6144
+      disk_size = 50
+      ip        = "192.168.100.111"
+    }
+    "k3s-worker02" = {
+      memory    = 6144
+      disk_size = 50
+      ip        = "192.168.100.112"
     }
   }
-
-  network {
-    id     = 0
-    model  = "virtio"
-    bridge = "vmbr0"
-  }
-
-  ipconfig0 = "ip=192.168.100.110/24,gw=192.168.100.1"
-  sshkeys   = var.ssh_public_key
-  cicustom  = "vendor=local:snippets/ubuntu.yaml"
 }
 
-resource "proxmox_vm_qemu" "k3s_worker01" {
-  name        = "k3s-worker01"
+resource "proxmox_vm_qemu" "k3s_cluster" {
+  for_each = local.k3s_vms
+
+  name        = each.key
   target_node = var.proxmox_node
   clone       = var.template_name
   agent       = 1
@@ -69,7 +47,7 @@ resource "proxmox_vm_qemu" "k3s_worker01" {
     cores = 2
     type  = "host"
   }
-  memory = 6144
+  memory = each.value.memory
 
   boot = "order=virtio0"
 
@@ -78,7 +56,7 @@ resource "proxmox_vm_qemu" "k3s_worker01" {
       virtio0 {
         disk {
           storage = var.storage_name
-          size    = 50
+          size    = each.value.disk_size
         }
       }
     }
@@ -97,51 +75,7 @@ resource "proxmox_vm_qemu" "k3s_worker01" {
     bridge = "vmbr0"
   }
 
-  ipconfig0 = "ip=192.168.100.111/24,gw=192.168.100.1"
-  sshkeys   = var.ssh_public_key
-  cicustom  = "vendor=local:snippets/ubuntu.yaml"
-}
-
-resource "proxmox_vm_qemu" "k3s_worker02" {
-  name        = "k3s-worker02"
-  target_node = var.proxmox_node
-  clone       = var.template_name
-  agent       = 1
-  os_type     = "cloud-init"
-
-  cpu {
-    cores = 2
-    type  = "host"
-  }
-  memory = 6144
-
-  boot = "order=virtio0"
-
-  disks {
-    virtio {
-      virtio0 {
-        disk {
-          storage = var.storage_name
-          size    = 50
-        }
-      }
-    }
-    ide {
-      ide3 {
-        cloudinit {
-          storage = var.storage_name
-        }
-      }
-    }
-  }
-
-  network {
-    id     = 0
-    model  = "virtio"
-    bridge = "vmbr0"
-  }
-
-  ipconfig0 = "ip=192.168.100.112/24,gw=192.168.100.1"
+  ipconfig0 = "ip=${each.value.ip}/24,gw=192.168.100.1"
   sshkeys   = var.ssh_public_key
   cicustom  = "vendor=local:snippets/ubuntu.yaml"
 }
