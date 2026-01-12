@@ -111,4 +111,18 @@ ssh ubuntu@192.168.100.112  # worker02
 
 > **NOTE:** The VMs will not be accessible via Proxmox UI console. Only via SSH
 
+### Generate Ansible Inventory
+
+View the Ansible inventory:
+
+```bash
+terraform output -raw ansible_inventory
+```
+
+Save it to the inventory file:
+
+```bash
+terraform output -raw ansible_inventory > ../../ansible/inventory.ini
+```
+
 ---
