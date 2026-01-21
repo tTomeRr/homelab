@@ -4,6 +4,7 @@
   become: true
   roles:
     - system_init
+    - monitoring
   tags: init
 
 - name: Configure firewall rules for K3S nodes
