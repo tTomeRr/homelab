@@ -17,3 +17,9 @@
 - name: Deploy K3s cluster
   import_playbook: k3s.orchestration.site
   tags: k3s
+
+- name: Install ArgoCD on cluster
+  hosts: server
+  roles:
+    - argocd
+  tags: argocd

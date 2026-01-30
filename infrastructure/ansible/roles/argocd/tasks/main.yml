@@ -1,0 +1,64 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for argocd
+# https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/
+- name: Install essential packages
+  ansible.builtin.apt:
+    name:
+      - python3
+      - python3-kubernetes
+
+- name: Create ArgoCD namespace
+  kubernetes.core.k8s:
+    kubeconfig: "/home/ubuntu/.kube/config"
+    name: argocd
+    api_version: v1
+    kind: Namespace
+    state: present
+
+- name: Download argocd manifest to the cluster.
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/argoproj/argo-cd/{{ argocd_version }}/manifests/install.yaml
+    dest: /tmp/install.yaml
+    mode: "0664"
+
+# Manifest taken from https://github.com/argoproj/argo-cd/releases
+- name: Apply argocd manifest to the cluster.
+  kubernetes.core.k8s:
+    kubeconfig: "/home/ubuntu/.kube/config"
+    namespace: argocd
+    state: present
+    src: /tmp/install.yaml
+    server_side_apply:
+      field_manager: ansible
+      force_conflicts: true
+
+- name: Wait for ArgoCD server pod to be ready
+  kubernetes.core.k8s:
+    kubeconfig: "/home/ubuntu/.kube/config"
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: argocd-server
+        namespace: argocd
+    wait: true
+    wait_sleep: 5
+    wait_timeout: 180
+
+- name: Get initial ArgoCD password
+  kubernetes.core.k8s_info:
+    kubeconfig: "/home/ubuntu/.kube/config"
+    api_version: v1
+    kind: Secret
+    name: argocd-initial-admin-secret
+    namespace: argocd
+  register: argocd_admin_password
+
+- name: Print admin credentials
+  ansible.builtin.debug:
+    msg:
+      - "=============================="
+      - "Username: admin"
+      - "Password: {{ argocd_admin_password.resources[0].data.password | b64decode }}"
+      - "=============================="
