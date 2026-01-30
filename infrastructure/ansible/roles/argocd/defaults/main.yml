@@ -1,4 +1,2 @@
-#SPDX-License-Identifier: MIT-0
 ---
 argocd_version: v3.2.6
-# defaults file for argocd

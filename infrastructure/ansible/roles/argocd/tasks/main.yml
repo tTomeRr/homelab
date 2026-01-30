@@ -1,6 +1,4 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# tasks file for argocd
 # https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/
 - name: Install essential packages
   ansible.builtin.apt:
