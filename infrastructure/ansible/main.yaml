@@ -19,6 +19,8 @@
   tags: k3s
 
 - name: Install ArgoCD on cluster
+  environment:
+    K8S_AUTH_KUBECONFIG: "/home/ubuntu/.kube/config"
   hosts: server
   roles:
     - argocd
