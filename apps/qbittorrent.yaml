@@ -7,7 +7,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/you/homelab
+    repoURL: https://github.com/tTomeRr/homelab
     targetRevision: HEAD
     path: apps/qbittorrent
   destination:
