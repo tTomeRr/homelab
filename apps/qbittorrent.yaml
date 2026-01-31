@@ -1,21 +1,19 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: root-app
-  namespace: argocd 
+  name: qbittorrent
+  namespace: argocd
 spec:
   project: default
   source:
-    repoURL: {{ argocd_root_url }} 
+    repoURL: https://github.com/you/homelab
     targetRevision: HEAD
-    path: apps
+    path: apps/qbittorrent
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: qbittorrent
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
-

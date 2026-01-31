@@ -4,6 +4,15 @@
     name: ufw
     state: present
 
+- name: Set logging
+  community.general.ufw:
+    logging: "on"
+
+- community.general.ufw:
+    rule: reject
+    port: auth
+    log: true
+
 - block:
     - name: Reset UFW to installation defaults (deletes all rules)
       community.general.ufw:
@@ -32,6 +41,16 @@
       loop:
         - 10.42.0.0/16
         - 10.43.0.0/16
+
+    - name: Enable qbittorrent
+      community.general.ufw:
+        rule: allow
+        direction: in
+        port: "50413"
+        proto: "{{ item }}"
+      loop:
+        - udp
+        - tcp
 
     - name: Allow outgoing
       community.general.ufw:

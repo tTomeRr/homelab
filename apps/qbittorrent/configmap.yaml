@@ -1,0 +1,27 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qbittorrent-configmap
+  namespace: qbittorrent
+data:
+  PUID: "1000"
+  PGID: "1000"
+  TZ: "Etc/IDT"
+  WEBUI_PORT: "8080"
+  TORRENTING_PORT: "50413"
+  WEBUI_PASSWORD: "admin"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qbittorrent-init-scripts
+  namespace: qbittorrent
+data:
+  init-qbittorrent.sh: |
+    #!/bin/bash
+    CONFIG="/config/qBittorrent/qBittorrent.conf"
+    echo "[Preferences]" >> "$CONFIG"
+    echo "WebUI\HostHeaderValidation=false" >> "$CONFIG" # To allow login to webui via port-forward (localhost:8080)
+    echo "[BitTorrent]" >> "$CONFIG"
+    echo "Session\QueueingSystemEnabled=false" >> "$CONFIG" # To disable the default hard limit for number of torrents that can be seeded at once

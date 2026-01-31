@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent-deployment
+  namespace: qbittorrent
+  labels:
+    app: qbittorrent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      containers:
+        - name: qbittorrent
+          image: lscr.io/linuxserver/qbittorrent:5.1.4
+          envFrom:
+            - configMapRef:
+                name: qbittorrent-configmap
+          volumeMounts:
+            - name: downloads
+              mountPath: /downloads
+            - name: config
+              mountPath: /config
+            - name: init-scripts
+              mountPath: /custom-cont-init.d
+          ports:
+            - name: webui
+              containerPort: 8080
+              protocol: TCP
+            - name: tcp
+              containerPort: 50413
+              protocol: TCP
+            - name: udp
+              containerPort: 50413
+              protocol: UDP
+      volumes:
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: qbittorrent-downloads
+        - name: config
+          persistentVolumeClaim:
+            claimName: qbittorrent-config
+        - name: init-scripts
+          configMap:
+            name: qbittorrent-init-scripts
+            defaultMode: 0755
