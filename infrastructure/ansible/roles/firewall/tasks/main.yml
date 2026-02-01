@@ -14,10 +14,10 @@
     log: true
 
 - block:
+    # Prevent VM lock-in in case of failure of one of the tasks.
     - name: Reset UFW to installation defaults (deletes all rules)
       community.general.ufw:
         state: reset
-    # Prevent VM lock-in in case of failure of one of the tasks.
 
   always:
     - name: Grant SSH access (port 22)
@@ -51,6 +51,13 @@
       loop:
         - udp
         - tcp
+
+    - name: Enable Node Exporter
+      community.general.ufw:
+        rule: allow
+        direction: in
+        port: "9100"
+        proto: tcp
 
     - name: Allow outgoing
       community.general.ufw:
