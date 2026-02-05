@@ -1,0 +1,39 @@
+---
+- name: Install xcaddy
+  vars:
+    xcaddy_filename: xcaddy{{ xcaddy_version }}.linux-amd64.tar.gz
+  block:
+    - name: Check if xcaddy binary exists
+      ansible.builtin.stat:
+        path: /usr/local/bin/xcaddy
+      register: xcaddy_binary
+
+    - name: Download xcaddy binary
+      ansible.builtin.get_url:
+        url: https://github.com/caddyserver/xcaddy/releases/download/v{{ xcaddy_version }}/xcaddy_{{ xcaddy_version }}_linux_amd64.tar.gz
+        dest: /tmp/{{ xcaddy_filename }}
+        mode: "0644"
+      when: not xcaddy_binary.stat.exists
+
+    - name: Unarchive the xcaddy binary
+      ansible.builtin.unarchive:
+        src: /tmp/{{ xcaddy_filename }}
+        dest: /tmp
+        remote_src: true
+      when: not xcaddy_binary.stat.exists
+
+    - name: Copy xcaddy binary to /usr/local/bin
+      ansible.builtin.copy:
+        src: /tmp/xcaddy
+        dest: /usr/local/bin
+        mode: "0755"
+        remote_src: true
+      when: not xcaddy_binary.stat.exists
+
+    - name: Clean up downloaded tarball and extracted directory
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /tmp/{{ xcaddy_filename }}
+      when: not xcaddy_binary.stat.exists

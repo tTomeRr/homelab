@@ -1,0 +1,4 @@
+---
+caddy_version: 2.10.2
+xcaddy_version: 0.4.5
+go_version: 1.25.7

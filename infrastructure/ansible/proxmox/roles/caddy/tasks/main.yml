@@ -1,0 +1,9 @@
+---
+- name: Install Go
+  include_tasks: install_go.yml
+
+- name: Install xcaddy
+  include_tasks: install_xcaddy.yml
+
+- name: Install Caddy
+  include_tasks: install_caddy.yml

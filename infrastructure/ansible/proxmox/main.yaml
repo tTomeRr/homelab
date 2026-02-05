@@ -1,0 +1,11 @@
+---
+- name: Install Cady
+  hosts: all
+  become: true
+  roles:
+    - system_init
+    - caddy
+# The Caddy role also installs Go as a binary because it is needed to build
+# Caddy with custom modules, and to do it we need xcaddy which is needed by a newer version of go
+# Because my proxmox host uses a bookwarm disributation, the go version is old and is not capable of
+# Downloading the xcaddy binary.

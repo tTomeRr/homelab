@@ -10,7 +10,6 @@ data:
   TZ: "Etc/IDT"
   WEBUI_PORT: "8080"
   TORRENTING_PORT: "50413"
-  WEBUI_PASSWORD: "admin"
 ---
 apiVersion: v1
 kind: ConfigMap

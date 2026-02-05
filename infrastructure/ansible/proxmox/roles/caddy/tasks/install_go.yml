@@ -1,0 +1,39 @@
+---
+- name: Install Go
+  vars:
+    go_filename: go{{ go_version }}.linux-amd64.tar.gz
+  block:
+    - name: Check if Go binary exists
+      ansible.builtin.stat:
+        path: /usr/local/bin/go
+      register: go_binary
+
+    - name: Download Go binary
+      ansible.builtin.get_url:
+        url: https://go.dev/dl/{{ go_filename }}
+        dest: /tmp/{{ go_filename }}
+        mode: "0644"
+      when: not go_binary.stat.exists
+
+    - name: Unarchive the Go binary
+      ansible.builtin.unarchive:
+        src: /tmp/{{ go_filename }}
+        dest: /tmp
+        remote_src: true
+      when: not go_binary.stat.exists
+
+    - name: Copy Go binary to /usr/local/
+      ansible.builtin.copy:
+        src: /tmp/go
+        dest: /usr/local/
+        mode: "0755"
+        remote_src: true
+      when: not go_binary.stat.exists
+
+    - name: Clean up downloaded tarball and extracted directory
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /tmp/{{ go_filename }}
+      when: not go_binary.stat.exists
