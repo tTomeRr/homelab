@@ -47,6 +47,12 @@
         owner: caddy
         group: caddy
 
+    - name: Create Caddyfile
+      ansible.builtin.template:
+        src: Caddyfile.j2
+        dest: /etc/caddy/Caddyfile
+        mode: "0644"
+
     - name: Create Systemd unit file
       ansible.builtin.template:
         src: service.j2

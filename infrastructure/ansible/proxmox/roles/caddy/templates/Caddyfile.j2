@@ -1,0 +1,21 @@
+{
+	acme_dns cloudflare {{ lookup('ansible.builtin.env', 'CF_TOKEN') }}
+}
+
+proxmox.tomerc.com {
+	reverse_proxy localhost:8006 {
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
+}
+
+adguard.tomerc.com {
+	reverse_proxy localhost:80 {
+	}
+}
+
+*.tomerc.com {
+	reverse_proxy 192.168.100.110:80 {
+	}
+}
