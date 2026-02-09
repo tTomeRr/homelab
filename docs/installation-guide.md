@@ -31,3 +31,7 @@
 ### 5. Deploy Caddy on Proxmox
 
 [Caddy on Proxmox Deployment](ansible/01-deploy-caddy.md)
+
+### 6. Deploy AdGuard Home on Proxmox
+
+[AdGuard Home on Proxmox Deployment](ansible/02-deploy-adguard.md)

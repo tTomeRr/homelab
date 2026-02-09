@@ -1,0 +1,48 @@
+---
+- name: Install Adguard
+  vars:
+    adguard_filename: AdGuardHome_linux_amd64.tar.gz
+    adguard_install_dir: /opt/AdGuardHome
+  block:
+    - name: Check if Adguard binary exists
+      ansible.builtin.stat:
+        path: "{{ adguard_install_dir }}/AdGuardHome"
+      register: adguard_binary
+
+    - name: Download Adguard binary
+      ansible.builtin.get_url:
+        url: https://github.com/AdguardTeam/AdGuardHome/releases/download/{{ adguard_version }}/{{ adguard_filename }}
+        dest: /tmp/{{ adguard_filename }}
+        mode: "0644"
+      when: not adguard_binary.stat.exists
+
+    - name: Unarchive the Adguard binary
+      ansible.builtin.unarchive:
+        src: /tmp/{{ adguard_filename }}
+        dest: /tmp
+        remote_src: true
+      when: not adguard_binary.stat.exists
+
+    - name: Move AdGuardHome to install directory
+      ansible.builtin.command: mv /tmp/AdGuardHome {{ adguard_install_dir }}
+      args:
+        creates: "{{ adguard_install_dir }}"
+      when: not adguard_binary.stat.exists
+
+    - name: Run Adguard install command
+      ansible.builtin.command: ./AdGuardHome -s install
+      args:
+        chdir: "{{ adguard_install_dir }}"
+      when: not adguard_binary.stat.exists
+
+    - name: Wait for AdGuardHome service to be ready
+      ansible.builtin.systemd:
+        name: AdGuardHome.service
+        state: started
+        enabled: true
+
+    - name: Clean up downloaded tarball
+      ansible.builtin.file:
+        path: /tmp/{{ adguard_filename }}
+        state: absent
+      when: not adguard_binary.stat.exists
