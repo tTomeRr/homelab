@@ -1,5 +1,5 @@
 {
-	acme_dns cloudflare {{ lookup('ansible.builtin.env', 'CF_TOKEN') }}
+	acme_dns cloudflare {{ cf_token }}
 }
 
 proxmox.tomerc.com {
