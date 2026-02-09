@@ -1,3 +1,4 @@
 # Ansible Documentation
 
-- [Deployment Guide](00-deploy.md)
+- [K3s Cluster Deployment](00-deploy-k3s.md)
+- [Caddy on Proxmox Deployment](01-deploy-caddy.md)

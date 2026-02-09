@@ -2,6 +2,7 @@
 
 ## Table of Contents
 1. [Installing & Configuring Proxmox](#installing--configuring-proxmox)
+2. [Deploying Infrastructure](#deploying-infrastructure)
 
 ---
 
@@ -17,4 +18,16 @@
 
 ### 3. Provision VMs
 
-[Install VMs with Terraform](proxmox/03-install-vms.md)
+[Install VMs with Terraform](proxmox/02-install-vms.md)
+
+---
+
+## Deploying Infrastructure
+
+### 4. Deploy K3s Cluster
+
+[K3s Cluster Deployment](ansible/00-deploy-k3s.md)
+
+### 5. Deploy Caddy on Proxmox
+
+[Caddy on Proxmox Deployment](ansible/01-deploy-caddy.md)
