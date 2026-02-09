@@ -126,3 +126,13 @@ terraform output -raw ansible_inventory > ../../ansible/inventory.ini
 ```
 
 ---
+
+## 6. Configure Auto-start for VMs 
+
+If the Proxmox VM crashes or restarts, by default the VMs will not come up (for example after a poweroutage)
+To combat this we turn on auto start. Go to the Proxmox UI and then for each VM:
+1. Go to 'Options'
+2. 'Start At Boot' -> 'Yes'
+
+---
+
