@@ -1,0 +1,20 @@
+# https://gethomepage.dev/installation/k8s
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: homepage
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tTomeRr/homelab
+    targetRevision: HEAD
+    path: apps/homepage
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: homepage
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
