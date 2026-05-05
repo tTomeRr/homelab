@@ -27,34 +27,28 @@ data:
             - abbr: HL
               href: https://github.com/tTomeRr/homelab
   services.yaml: |
-    - Infrastructure Services:
+    - Infrastructure:
         - Proxmox:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/proxmox.svg
             href: https://proxmox.tomerc.com
-            siteMonitor: https://proxmox.tomerc.com
             description: Proxmox
         - ArgoCD:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/argo-cd.svg
             href: https://argocd.tomerc.com
-            siteMonitor: https://argocd.tomerc.com
             description: ArgoCD
         - AdGuard Home:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/adguard-home.svg
             href: https://adguard.tomerc.com
-            siteMonitor: https://adguard.tomerc.com
             description: Ad Guard Home
 
-    - Services:
+    - Applications:
         - qBittorrent:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qbittorrent.svg
             href: https://qbittorrent.tomerc.com
-            siteMonitor: http://qbittorrent-service.qbittorrent.svc.cluster.local:8080
             description: qBittorrent
         - Home Assistant:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/home-assistant.svg
             href: https://homeassistant.tomerc.com
-            siteMonitor: https://google.com
-            ping: google.com
             description: Home Assistant
 
   widgets.yaml: |
