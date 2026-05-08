@@ -29,6 +29,31 @@
       field_manager: ansible
       force_conflicts: true
 
+# We do this patch to connect to the ArgoCD server via URL and not port-forward
+- name: Patch the Configmap to insecure
+  kubernetes.core.k8s:
+    state: patched
+    kind: ConfigMap
+    namespace: argocd
+    name: argocd-cmd-params-cm
+    definition:
+      data:
+        server.insecure: "true"
+
+# Rollout restart for the patch to take effect
+- name: Restart ArgoCD Server after patch
+  kubernetes.core.k8s:
+    state: patched
+    kind: Deployment
+    name: argocd-server
+    namespace: argocd
+    definition:
+      spec:
+        template:
+          metadata:
+            annotations:
+              kubectl.kubernetes.io/restartedAt: "{{ now(fmt='%Y-%m-%dT%H:%M:%SZ') }}"
+
 - name: Wait for ArgoCD server pod to be ready
   kubernetes.core.k8s:
     definition:
@@ -40,6 +65,16 @@
     wait: true
     wait_sleep: 5
     wait_timeout: 180
+
+- name: Template the ingressroute manifest to /tmp
+  ansible.builtin.template:
+    src: ingressroute.yaml.j2
+    dest: /tmp/ingressroute.yaml
+
+- name: Apply the IngressRoute manifest
+  kubernetes.core.k8s:
+    state: present
+    src: /tmp/ingressroute.yaml
 
 - name: Template the apps-of-apps manifest to /tmp
   ansible.builtin.template:
