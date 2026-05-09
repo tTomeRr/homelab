@@ -24,7 +24,7 @@
 
 ## Deploying Infrastructure
 
-### 4. Deploy K3s Cluster
+### 4. Deploy K3s Cluster + ArgoCD
 
 [K3s Cluster Deployment](ansible/00-deploy-k3s.md)
 
