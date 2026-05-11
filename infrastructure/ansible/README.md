@@ -1,0 +1,3 @@
+**Proxmox**- Roles for the Proxmox server machine
+**k3s**- Roles for the Proxmox VMs Kubernetes nodes
+**shared-roles**- Roles both for the Proxmox Server and Proxmox machines
