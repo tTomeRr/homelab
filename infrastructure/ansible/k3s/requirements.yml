@@ -2,4 +2,4 @@
 collections:
   - name: https://github.com/k3s-io/k3s-ansible.git
     type: git
-    version: 67ca2bfd1c39289a8e418dcb1a4940748dce5649
+    version: 26245771fd983228bedffa9133172971a310e36d
