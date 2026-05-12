@@ -12,7 +12,7 @@
   become: true
   roles:
     - firewall
-  tags: security
+  tags: firewall
 
 - name: Deploy K3s cluster
   import_playbook: k3s.orchestration.site
@@ -25,3 +25,11 @@
   roles:
     - argocd
   tags: argocd
+
+- name: Run Security Roles
+  hosts: all
+  become: true
+  roles:
+    - security
+  tags:
+    - security

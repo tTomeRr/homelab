@@ -26,3 +26,11 @@
     - adguard
   tags:
     - adguard
+
+- name: Run Security Roles
+  hosts: all
+  become: true
+  roles:
+    - security
+  tags:
+    - security

@@ -1,0 +1,25 @@
+---
+- name: Update apt cache and upgrade all packages
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: "safe"
+
+- name: Install jq package for the ssh script
+  ansible.builtin.apt:
+    name:
+      - jq
+
+- name: Deploy notification script
+  ansible.builtin.template:
+    src: notify.sh.j2
+    dest: /etc/ssh/notify.sh
+    owner: root
+    group: root
+    mode: "0700"
+  no_log: true # avoid leaking the rendered content into logs on failure
+
+- name: Add the notification script to pam sshd module
+  ansible.builtin.blockinfile:
+    path: /etc/pam.d/sshd
+    block: "session optional pam_exec.so /etc/ssh/notify.sh"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"

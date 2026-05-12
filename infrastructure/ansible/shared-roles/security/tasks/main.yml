@@ -1,0 +1,3 @@
+---
+- name: Deploy Notify SSH Script
+  include_tasks: deploy_notify_ssh_script.yml

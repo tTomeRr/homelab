@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Trigger only when creating SSH session
+[ "$PAM_TYPE" != "open_session" ] && exit 0
+
+discord_webhook_url={{ discord_webhook_token }}
+
+msg_content="===========
+SSH Login on $(hostname)
+User: $PAM_USER
+From: $PAM_RHOST
+Time: $(date '+%d-%m-%Y %T')
+=========="
+
+# We use jq so spaces/special characters would not break the msg_content var 
+
+payload=$(jq -n --arg content "$msg_content" '{content: $content}')
+
+curl --max-time 5 -s -o /dev/null \
+  -H "Content-Type: application/json" \
+  -X POST \
+  -d "$payload" \
+  "$discord_webhook_url"

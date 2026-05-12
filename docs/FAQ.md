@@ -37,5 +37,9 @@ Place the file under `group_vars/all/` for all hosts, or `group_vars/<groupname>
 ...
 vault_password_file = ~/.vault_password
 ```
+5. Validate the token is readable by executing:
+```bash
+ ansible -i inventory.ini all -m debug -a "var=very_secret_token"
+```
 
 ---
