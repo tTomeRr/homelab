@@ -43,3 +43,25 @@ vault_password_file = ~/.vault_password
 ```
 
 ---
+
+**How to upgrade the k3s nodes?**
+
+1. Go to the [k3s releases page](https://github.com/k3s-io/k3s/releases) and copy the release tag (e.g. `v1.33.4+k3s1`).
+2. Update `k3s_version` in `infrastructure/ansible/k3s/inventory.ini` with the new tag.
+3. Run the upgrade playbook from `infrastructure/ansible/k3s/`:
+```bash
+ansible-playbook k3s.orchestration.upgrade -i inventory.ini
+```
+
+---
+
+**How to upgrade the k3s-ansible galaxy role?**
+
+1. Go to the [k3s-ansible repo](https://github.com/k3s-io/k3s-ansible) and copy the full commit SHA of the latest `main` commit.
+2. Update the `version:` field in `infrastructure/ansible/k3s/requirements.yml` with the new SHA.
+3. Re-install the collection:
+```bash
+ansible-galaxy collection install -r requirements.yml --force
+```
+
+---
