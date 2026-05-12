@@ -1,0 +1,4 @@
+---
+# Fix the bug where the token is written to the K3S master node as the literal vault encrypted var
+# instead as the decrypted cluster token
+token: "{{ '' ~ vault_token }}"
