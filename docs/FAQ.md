@@ -55,6 +55,42 @@ ansible-playbook k3s.orchestration.upgrade -i inventory.ini
 
 ---
 
+**How to create a Bitnami sealed secret?**
+
+1. Create a plain Kubernetes Secret manifest (do not apply it to the cluster):
+```yaml
+# secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: some-secret
+  namespace: myapp
+type: Opaque
+stringData:
+  SECRET_ENV: secret_var
+```
+2. Seal it with `kubeseal`:
+```bash
+kubeseal --controller-name sealed-secrets --controller-namespace kube-system \
+  --format=yaml < secret.yaml > secret-sealed.yaml
+```
+> **Note**:  Make sure that you configure kubectl to use the namespace where you want your secret.
+> e.g `kubectl config set-context --current --namespace homepage`
+
+3. Apply the sealed secret to the cluster:
+```bash
+kubectl apply -f sealed-secrets.yaml
+```
+4. Verify the controller decrypted it into a regular Secret:
+```bash
+kubectl get sealedsecrets.bitnami.com -n myapp
+```
+
+> Never commit the unsealed file.`.
+> Comment the sealed secret with  # gitleaks:allow to pass pre-commit test.
+
+---
+
 **How to upgrade the k3s-ansible galaxy role?**
 
 1. Go to the [k3s-ansible repo](https://github.com/k3s-io/k3s-ansible) and copy the full commit SHA of the latest `main` commit.
