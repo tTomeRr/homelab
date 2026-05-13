@@ -50,6 +50,13 @@ data:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/home-assistant.svg
             href: https://homeassistant.tomerc.com
             description: Home Assistant
+        - UptimeKuma:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/uptime-kuma.svg
+            href: https://uptimekuma.tomerc.com
+            widget:
+              type: uptimekuma
+              url: http://uptimekuma-service.uptimekuma.svc.cluster.local:3001
+              slug: default
 
   widgets.yaml: |
     - kubernetes:

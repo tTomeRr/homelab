@@ -1,0 +1,41 @@
+# Based on https://uptimekuma.org/install-uptime-kuma-docker/
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uptimekuma-deployment
+  namespace: uptimekuma
+  labels:
+    app: uptimekuma
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uptimekuma
+  template:
+    metadata:
+      labels:
+        app: uptimekuma
+    spec:
+      containers:
+        - name: uptimekuma
+          image: docker.io/louislam/uptime-kuma:2.3.2
+          env:
+            - name: TZ
+              value: "IDT"
+            - name: UMSAK
+              value: "0022"
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+          ports:
+            - name: tcp
+              containerPort: 3001
+              protocol: TCP
+            - name: udp
+              containerPort: 3001
+              protocol: UDP
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: uptimekuma-data
