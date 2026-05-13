@@ -17,12 +17,13 @@ spec:
       labels:
         app: uptimekuma
     spec:
+      serviceAccountName: tailscale
       containers:
         - name: uptimekuma
           image: docker.io/louislam/uptime-kuma:2.3.2
           env:
             - name: TZ
-              value: "IDT"
+              value: "Asia/Jerusalem"
             - name: UMSAK
               value: "0022"
           volumeMounts:
@@ -32,9 +33,31 @@ spec:
             - name: tcp
               containerPort: 3001
               protocol: TCP
-            - name: udp
-              containerPort: 3001
-              protocol: UDP
+        - name: ts-sidecar
+          imagePullPolicy: Always
+          image: "ghcr.io/tailscale/tailscale:v1.96.5"
+          env:
+            - name: TS_USERSPACE
+              value: "false"
+            - name: TS_DEBUG_FIREWALL_MODE
+              value: auto
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: tailscale-auth
+                  key: TS_AUTHKEY
+            - name: TS_KUBE_SECRET
+              value: "tailscale-state"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+          securityContext:
+            privileged: true
       volumes:
         - name: data
           persistentVolumeClaim:
