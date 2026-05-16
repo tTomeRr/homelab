@@ -35,3 +35,7 @@
 ### 6. Deploy AdGuard Home on Proxmox
 
 [AdGuard Home on Proxmox Deployment](ansible/02-deploy-adguard.md)
+
+### 7. Install Home Assistant
+
+[Home Assistant OS on Proxmox](homeassistant/00-installation.md)
