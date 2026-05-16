@@ -1,33 +1,26 @@
-# Tomer's Homelab
+# Homelab
 
-This is my personal Homelab I currently run in my home. 
-The goals of this homelab are:
-    - To make everything as automatic as possible (no manual work)
-    - To make everything declerative
-    - For my personal study and enjoyment
+> Personal homelab running on a Lenovo ThinkCentre M720q Tiny (i5-8500 · 16GB RAM · 256GB NVMe)
+
+## Goals
+- To make everything as automatic as possible (no manual work)
+- To make everything declerative (ArgoCD, Terraform, Ansible)
+- For my personal study and enjoyment
+- Security best practices
+- Actually use some of the apps I installed
 
 ## Architecture
 
+![Architecture Diagram](https://github.com/user-attachments/assets/c88b60ac-ce99-4ced-8009-3c0ec2858bb6)
+
 | Layer | Technology |
-|-------|-----------|
+|-------|------------|
 | Hypervisor | Proxmox |
-| VMs | Ubuntu (provisioned via Terraform on Proxmox) |
-| Kubernetes | K3s (1 master + 2 workers) |
+| VMs | Ubuntu Server (K3s nodes) · Home Assistant OS |
+| Kubernetes | K3s - 1 master + 2 workers |
 | GitOps | ArgoCD |
-| Ingress | Caddy (Proxmox) |
-
-See [docs/architecture.md](docs/architecture.md) for full details.
-
-## Applications
-
-| Application | Installed On | Description | Docs |
-|-------------|-------------|-------------|------|
-| [Homepage](https://github.com/gethomepage/homepage) | K3s | Dashboard | [docs](docs/homepage/00-troubleshooting.md) |
-| [qBittorrent](https://github.com/qbittorrent/qBittorrent) | K3s | Torrent client | [docs](docs/qbittorrent/00-troubleshooting.md) |
-| [ArgoCD](https://github.com/argoproj/argo-cd) | K3s | GitOps | [docs](docs/argocd/00-troubleshooting.md) |
-| [Caddy](https://github.com/caddyserver/caddy) | Proxmox | Reverse proxy | [docs](docs/caddy/README.md) |
-| [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) | Proxmox | DNS filtering / ad blocking | [docs](docs/adguard/README.md) |
-
+| Ingress | Caddy (Proxmox-level) |
+| VPN | Tailscale |
 
 ## Getting Started
 
@@ -35,4 +28,4 @@ See [docs/installation-guide.md](docs/installation-guide.md) for the full setup 
 
 ## FAQ
 
-See [docs/FAQ.md](docs/FAQ.md) for common tasks
+See [docs/FAQ.md](docs/FAQ.md) for common tasks and troubleshooting.
