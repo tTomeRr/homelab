@@ -16,7 +16,7 @@ ArgoCD UI → open the app → **App Details** → **Summary** → **Disable Aut
 
 **How to add a new encrypted variable to vault.yml?**
 1. Run `ansible-vault encrypt_string --stdin-name 'encrypted_var_name'`
-2. Enter your vault password when prompted, then paste the secret value and hit Ctrl-D.
+2. Enter your vault password if prompted (it will not ask for vault password if you run it in the ansible directory), then paste the secret value and hit Ctrl-D twice (Do not press enter!).
 3. Copy the output block and append it to `group_vars/all/vault.yml`.
 Example output:
 ```yaml
@@ -40,6 +40,65 @@ vault_password_file = ~/.vault_password
 5. Validate the token is readable by executing:
 ```bash
  ansible -i inventory.ini all -m debug -a "var=very_secret_token"
+```
+
+---
+
+**How to rotate secrets?**
+
+**Cloudflare token** (`infrastructure/ansible/proxmox/`):
+1. Cloudflare dashboard → Mangage Account →  **Account API Tokens** → find the token → **⋯** → **Roll**.
+2. Re-encrypt:
+```bash
+ansible-vault encrypt_string --stdin-name 'cf_token'
+```
+3. Re-run the proxmox playbook: `ansible-playbook main.yaml`
+
+**Discord webhook** (`infrastructure/ansible/k3s/`):
+1. Discord → channel Settings → Integrations → Webhooks → delete old, create new, copy full URL.
+2. Re-encrypt:
+```bash
+ansible-vault encrypt_string --stdin-name 'discord_webhook_token'
+```
+3. Re-run the k3s playbook: `ansible-playbook main.yaml`
+
+**k3s cluster token** (`infrastructure/ansible/k3s/`):
+1. Generate a new token and save it to Bitwarden:
+```bash
+openssl rand -base64 64 | tr -d '\n'
+```
+2. Re-encrypt:
+```bash
+ansible-vault encrypt_string --stdin-name 'k3s_token'
+```
+3. Rotate the token on the cluster (SSH to master):
+```bash
+sudo k3s token rotate --new-token "<new token value>"
+```
+4. Restart the agents on each worker node:
+```bash
+sudo systemctl restart k3s-agent
+```
+5. Re-run the k3s playbook: `ansible-playbook main.yaml`
+
+---
+
+**How to rotate the Ansible vault password?**
+
+> `ansible-vault rekey` does not work for `encrypt_string` inline variables - each must be decrypted and re-encrypted manually.
+
+1. Generate a new vault password and save it to Bitwarden:
+```bash
+openssl rand -base64 48 | tr -d '\n' > ~/.vault_password && chmod 600 ~/.vault_password
+```
+2. Re-encrypt all variables with the new password using the decoded secret values - follow the **"How to rotate secrets?"** guide above for each one.
+3. Verify all variables decrypt correctly:
+```bash
+# From infrastructure/ansible/proxmox/
+ansible -i inventory.ini all -m debug -a "var=cf_token"
+# From infrastructure/ansible/k3s/
+ansible -i inventory.ini all -m debug -a "var=discord_webhook_token"
+ansible -i inventory.ini all -m debug -a "var=k3s_token"
 ```
 
 ---
