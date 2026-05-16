@@ -22,12 +22,12 @@ locals {
       ip        = "192.168.100.110"
     }
     "k3s-worker01" = {
-      memory    = 6144
+      memory    = 4096
       disk_size = 50
       ip        = "192.168.100.111"
     }
     "k3s-worker02" = {
-      memory    = 6144
+      memory    = 4096
       disk_size = 50
       ip        = "192.168.100.112"
     }

@@ -67,10 +67,3 @@
         enabled: true
         daemon_reload: true
         name: caddy
-
-- handlers:
-    - name: Restart Caddy
-      ansible.builtin.systemd_service:
-        name: caddy
-        state: restarted
-        daemon_reload: true
