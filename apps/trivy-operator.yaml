@@ -16,6 +16,8 @@ spec:
         trivy:
           severity: "HIGH CRITICAL"
           ignoreUnfixed: true
+        serviceMonitor:
+          enabled: true
   destination:
     server: https://kubernetes.default.svc
     namespace: trivy-system
