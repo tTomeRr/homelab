@@ -1,0 +1,54 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 85.1.3
+      helm:
+        releaseName: kube-prometheus-stack
+        values: |
+          prometheus:
+            prometheusSpec:
+              retention: 14d
+              retentionSize: "8GB"
+              storageSpec:
+                volumeClaimTemplate:
+                  spec:
+                    storageClassName: "local-path"
+                    resources:
+                      requests:
+                        storage: 10Gi
+          nodeExporter:
+            enabled: false
+          grafana:
+            admin:
+              existingSecret: grafana-creds
+              userKey: admin-user
+              passwordKey: admin-password
+            persistence:
+              enabled: true
+              storageClassName: "local-path"
+              size: 2Gi
+            sidecar:
+              dashboards:
+                enabled: true
+          alertmanager:
+            enabled: false
+    - repoURL: https://github.com/tTomeRr/homelab
+      targetRevision: HEAD
+      path: apps/monitoring
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
