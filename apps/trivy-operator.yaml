@@ -12,6 +12,8 @@ spec:
     targetRevision: 0.33.1
     helm:
       releaseName: trivy-operator
+      apiVersions:
+        - monitoring.coreos.com/v1
       values: |
         trivy:
           severity: "HIGH CRITICAL"
