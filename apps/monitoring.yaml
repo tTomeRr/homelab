@@ -43,6 +43,8 @@ spec:
     - repoURL: https://github.com/tTomeRr/homelab
       targetRevision: HEAD
       path: apps/monitoring
+      directory:
+        recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
