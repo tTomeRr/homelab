@@ -1,4 +1,4 @@
 ---
-argocd_version: v3.2.6
+argocd_version: v3.4.3
 argocd_root_url: https://github.com/tTomeRr/homelab
 argocd_ingress_url: argocd.tomerc.com

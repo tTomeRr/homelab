@@ -160,3 +160,16 @@ ansible-galaxy collection install -r requirements.yml --force
 ```
 
 ---
+
+**How to upgrade ArgoCD?**
+
+1. Check the [upgrading docs](https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/overview/) for breaking changes
+2. Update `argocd_version` in `roles/argocd/defaults/main.yml`.
+3. Run the playbook from `infrastructure/ansible/k3s/`:
+```bash
+ansible-playbook main.yaml --tags argocd
+```
+
+> ArgoCD recommends upgrading one minor version at a time (e.g. 3.2 → 3.3 → 3.4)
+
+---
