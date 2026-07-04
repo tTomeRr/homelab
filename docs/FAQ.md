@@ -173,3 +173,9 @@ ansible-playbook main.yaml --tags argocd
 > ArgoCD recommends upgrading one minor version at a time (e.g. 3.2 → 3.3 → 3.4)
 
 ---
+
+**How to create a TailScale sidecar for Kubernetes deployment?** 
+
+Follow Tailscale [Setup Guide](https://github.com/tailscale/tailscale/tree/main/docs/k8s)
+
+---
