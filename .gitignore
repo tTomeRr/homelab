@@ -1,6 +1,6 @@
 *.env*
 .vault_password
-
+secret.y*ml
 
 # Local .terraform directories
 .terraform/
