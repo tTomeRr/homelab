@@ -39,24 +39,27 @@ data:
         - AdGuard Home:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/adguard-home.svg
             href: https://adguard.tomerc.com
-            description: Ad Guard Home
+            description: AdGuard Home
+        - Grafana:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/grafana.svg
+            href: https://grafana.tomerc.com
+            description: Grafana
 
     - Applications:
         - qBittorrent:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/qbittorrent.svg
             href: https://qbittorrent.tomerc.com
             description: qBittorrent
-        - Home Assistant:
+        - HomeAssistant:
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/home-assistant.svg
             href: https://homeassistant.tomerc.com
-            description: Home Assistant
-        - UptimeKuma:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/uptime-kuma.svg
-            href: https://uptimekuma.tomerc.com
+            description: HomeAssistant
+        - Gatus:
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/gatus.svg
+            href: https://gatus.tomerc.com
             widget:
-              type: uptimekuma
-              url: http://uptimekuma-service.uptimekuma.svc.cluster.local:3001
-              slug: default
+              type: gatus
+              url: http://gatus-service.gatus.svc.cluster.local:8080
 
   widgets.yaml: |
     - kubernetes:
