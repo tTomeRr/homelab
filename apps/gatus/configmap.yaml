@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gatus-config
+  namespace: gatus
+data:
+  config.yaml: |
+    metrics: true
+    storage:
+      type: sqlite
+      path: /data/data.db
+    ui:
+      title: "Gatus"
+    alerting:
+      discord:
+        webhook-url: "${DISCORD_WEBHOOK_URL}"
+        default-alert:
+          enabled: true
+          failure-threshold: 3
+          success-threshold: 2
+          send-on-resolved: true
+    endpoint-defaults: &endpoint-defaults
+      interval: 1m
+      conditions:
+        - "[STATUS] == 200"
+      alerts:
+        - type: discord
+    endpoints:
+      - <<: *endpoint-defaults
+        name: Proxmox
+        group: Proxmox
+        url: "https://proxmox.tomerc.com"
+      - <<: *endpoint-defaults
+        name: AdGuard
+        group: AdGuard
+        url: "https://adguard.tomerc.com"
+      - <<: *endpoint-defaults
+        name: HomeAssistant
+        group: HomeAssistant
+        url: "https://homeassistant.tomerc.com"
+      - <<: *endpoint-defaults
+        name: Homepage
+        group: Homepage
+        url: "https://homepage.tomerc.com"
+      - <<: *endpoint-defaults
+        name: ArgoCD
+        group: ArgoCD
+        url: "https://argocd.tomerc.com"
+      - <<: *endpoint-defaults
+        name: qBittorrent
+        group: qBittorrent
+        url: "https://qbittorrent.tomerc.com"

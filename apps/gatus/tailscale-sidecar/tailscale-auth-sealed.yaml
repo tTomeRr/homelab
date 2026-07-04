@@ -1,0 +1,13 @@
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: tailscale-auth
+  namespace: gatus
+spec:
+  encryptedData:
+    TS_AUTHKEY: AgA+FPfLAgSfoLWUnGPsIBFSyu9O5FDjDvcbv8VGx31PFuNb5NQsUr6fgMMT120RVb0cXrcOv97K4h1EX2q8QAznS4EWCaTWq36qR8w1ONlQAeZEslJjLeHniNObrz8b0kuy4qCthFNiB0YrK9CKRoPzlL5c9Q0ZZeN8HxtMDYrwA7Wfj221gqa6oyKWB6CygUoRgs3dqL45owCLRPEKeSYxUsa9wZRzzVMh53AzurEkH4XyGOr0ZnYr0kLDEG5wz1WDCRf489WGOaUiZe51aAlHj0uHDyGC7+grP6X9wv75TcCPhT+fRcuor9IvzKD/Id3PKdu5fBrRM/995A8QKQC4IKN9lDDIaMLJoi691OWT1tET8tn7j3G6/JKhWoc71iWJocMvxawgrqI4qNcY3SECimW1k22gE59B4pEezComgOTQITug4r+PMphe5gjdCjFd90q81ELHwO9T1Q4qfREqYnt+2r1aA0+12HNh2vK9QXwe5zqXHZrb8PeoLE2jxoijs4R1hL+B7xhneESRxMJ2+ZUv8cSI25BpJrCxodsVPOAgn+kzvY3EpfxjkvFqX1khiVwC5MJMkm93llnbLpdP7ha4ZIbc/Z5QyPFKaKyHD6p59EJRsHS9PUW12w1OgMglzz0RhBK1vO/HZwTyDqY9gDCTpUMLAYIhixVSkGXKUT2AP3xeO+40tNPBCY2nXj0kfpUGcftasggFdWz79UJlbct8vh00CrR3Bv6uJudPDbnK/HsKxnjmYdiwlmvQOlY3rsA6z/jdmU80RBQs4A==
+  template:
+    metadata:
+      name: tailscale-auth
+      namespace: gatus

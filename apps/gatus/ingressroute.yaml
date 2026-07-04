@@ -1,0 +1,15 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: gatus-ingressroute
+  namespace: gatus
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`gatus.tomerc.com`)
+      kind: Rule
+      services:
+        - name: gatus-service
+          port: 8080
