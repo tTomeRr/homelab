@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memos-deployment
+  namespace: memos
+  labels:
+    app: memos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memos
+  template:
+    metadata:
+      labels:
+        app: memos
+    spec:
+      containers:
+        - name: memos
+          image: docker.io/neosmemo/memos:0.29.1@sha256:5c4d5c8eddd02372f34d1ffec2d3ed54bd85276e8ccd7fc86442b9b771f77c99
+          volumeMounts:
+            - name: data
+              mountPath: /var/opt/memos
+          ports:
+            - name: tcp
+              containerPort: 5230
+              protocol: TCP
+          env:
+            - name: MEMOS_INSTANCE_URL
+              value: "https://memos.tomerc.com"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: memos-data
