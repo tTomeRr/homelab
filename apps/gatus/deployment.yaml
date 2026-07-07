@@ -59,7 +59,13 @@ spec:
                 fieldRef:
                   fieldPath: metadata.uid
           securityContext:
-            privileged: true
+            capabilities:
+              add:
+                - NET_ADMIN
+                - NET_RAW
+          volumeMounts:
+            - name: dev-net-tun
+              mountPath: /dev/net/tun
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -67,3 +73,6 @@ spec:
         - name: gatus-config
           configMap:
             name: gatus-config
+        - name: dev-net-tun
+          hostPath:
+            path: /dev/net/tun
