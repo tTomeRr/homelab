@@ -179,3 +179,17 @@ ansible-playbook main.yaml --tags argocd
 Follow Tailscale [Setup Guide](https://github.com/tailscale/tailscale/tree/main/docs/k8s)
 
 ---
+
+**504 connection timeout / can't reach a service over Tailscale**
+
+This usually means a Tailscale node's auth key/session has expired.
+
+1. Go to the [Tailscale admin console](https://login.tailscale.com/admin/machines) → **Machines**.
+2. Check if any machine shows as **Expired**.
+3. If so, log back in on that machine:
+```bash
+sudo tailscale up
+```
+4. Confirm the machine shows as connected again in the admin console.
+
+---
