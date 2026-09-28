@@ -1,0 +1,386 @@
+title: Home
+views:
+  - title: Home
+    path: home
+    type: sections
+    max_columns: 2
+    background: >-
+      center / cover no-repeat fixed
+      radial-gradient(circle at 0% 0%, rgba(0,150,136,0.22) 0%, transparent 45%),
+      radial-gradient(circle at 100% 100%, rgba(33,150,243,0.18) 0%, transparent 50%),
+      #0e1116
+    sections:
+      # ───────────── Left: status, weather, controls ─────────────
+      - type: grid
+        cards:
+          - type: custom:mushroom-title-card
+            title: >-
+              {% set h = now().hour %}
+              {{ 'Good morning' if h < 12 else 'Good afternoon' if h < 18 else 'Good evening' }}
+            subtitle: "{{ now().strftime('%A, %d %B') }}"
+            alignment: start
+            grid_options:
+              columns: full
+
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.bedroom_temperature_and_humidity_sensor_temperature') | round(1) }}°C"
+            secondary: Temperature
+            icon: mdi:thermometer
+            icon_color: >-
+              {% set t = states('sensor.bedroom_temperature_and_humidity_sensor_temperature') | float(0) %}
+              {{ 'blue' if t < 18 else 'green' if t <= 26 else 'orange' }}
+            layout: vertical
+            fill_container: true
+            entity: sensor.bedroom_temperature_and_humidity_sensor_temperature
+            tap_action:
+              action: more-info
+            grid_options:
+              columns: 4
+            card_mod:
+              style: |
+                ha-card {
+                  {% set t = states('sensor.bedroom_temperature_and_humidity_sensor_temperature') | float(0) %}
+                  {% set c = '33,150,243' if t < 18 else '76,175,80' if t <= 26 else '255,152,0' %}
+                  background: linear-gradient(145deg, rgba({{ c }},0.35), rgba({{ c }},0.06)) !important;
+                  border: 1px solid rgba({{ c }},0.45) !important;
+                  border-radius: 22px !important;
+                  --primary-text-color: #fff;
+                  --card-primary-font-size: 22px;
+                }
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.bedroom_temperature_and_humidity_sensor_humidity') | round(0) | int }}%"
+            secondary: Humidity
+            icon: mdi:water-percent
+            icon_color: >-
+              {% set h = states('sensor.bedroom_temperature_and_humidity_sensor_humidity') | float(0) %}
+              {{ 'green' if 40 <= h <= 60 else 'amber' }}
+            layout: vertical
+            fill_container: true
+            entity: sensor.bedroom_temperature_and_humidity_sensor_humidity
+            tap_action:
+              action: more-info
+            grid_options:
+              columns: 4
+            card_mod:
+              style: |
+                ha-card {
+                  {% set h = states('sensor.bedroom_temperature_and_humidity_sensor_humidity') | float(0) %}
+                  {% set c = '76,175,80' if 40 <= h <= 60 else '255,193,7' %}
+                  background: linear-gradient(145deg, rgba({{ c }},0.35), rgba({{ c }},0.06)) !important;
+                  border: 1px solid rgba({{ c }},0.45) !important;
+                  border-radius: 22px !important;
+                  --primary-text-color: #fff;
+                  --card-primary-font-size: 22px;
+                }
+          - type: custom:mushroom-template-card
+            primary: "{{ states('sensor.${HA_AIR_PURIFIER}_pm25_density') | int }} µg/m³"
+            secondary: PM2.5
+            icon: mdi:blur
+            icon_color: >-
+              {% set p = states('sensor.${HA_AIR_PURIFIER}_pm25_density') | float(0) %}
+              {{ 'green' if p <= 12 else 'amber' if p <= 35 else 'red' }}
+            layout: vertical
+            fill_container: true
+            entity: sensor.${HA_AIR_PURIFIER}_pm25_density
+            tap_action:
+              action: more-info
+            grid_options:
+              columns: 4
+            card_mod:
+              style: |
+                ha-card {
+                  {% set p = states('sensor.${HA_AIR_PURIFIER}_pm25_density') | float(0) %}
+                  {% set c = '76,175,80' if p <= 12 else '255,193,7' if p <= 35 else '244,67,54' %}
+                  background: linear-gradient(145deg, rgba({{ c }},0.35), rgba({{ c }},0.06)) !important;
+                  border: 1px solid rgba({{ c }},0.45) !important;
+                  border-radius: 22px !important;
+                  --primary-text-color: #fff;
+                  --card-primary-font-size: 22px;
+                }
+
+          - type: custom:mushroom-chips-card
+            alignment: start
+            grid_options:
+              columns: full
+            chips:
+              - type: conditional
+                conditions:
+                  - entity: binary_sensor.water_leaks
+                    state: "on"
+                chip:
+                  type: template
+                  icon: mdi:water-alert
+                  icon_color: red
+                  content: Leak!
+              - type: conditional
+                conditions:
+                  - entity: binary_sensor.smoke_detectors
+                    state: "on"
+                chip:
+                  type: template
+                  icon: mdi:fire-alert
+                  icon_color: red
+                  content: Smoke!
+              - type: conditional
+                conditions:
+                  - entity: binary_sensor.moes_co_detector
+                    state: "on"
+                chip:
+                  type: template
+                  icon: mdi:molecule-co
+                  icon_color: red
+                  content: CO!
+              - type: conditional
+                conditions:
+                  - entity: binary_sensor.all_openings
+                    state: "on"
+                chip:
+                  type: template
+                  icon: mdi:door-open
+                  icon_color: amber
+                  content: Door open
+              - type: conditional
+                conditions:
+                  - entity: ${HA_WATER_HEATER_SWITCH}
+                    state: "on"
+                chip:
+                  type: template
+                  icon: mdi:water-boiler
+                  icon_color: orange
+                  content: Dud on
+
+          - type: weather-forecast
+            entity: weather.forecast_home
+            forecast_type: daily
+            show_current: true
+            show_forecast: true
+            grid_options:
+              columns: full
+            card_mod: &glass
+              style: |
+                ha-card {
+                  background: rgba(255,255,255,0.05) !important;
+                  backdrop-filter: blur(12px);
+                  border: 1px solid rgba(255,255,255,0.08) !important;
+                  border-radius: 22px !important;
+                }
+
+          - type: heading
+            heading: Controls
+            icon: mdi:tune-variant
+          - type: tile
+            entity: ${HA_WATER_HEATER_SWITCH}
+            name: Dud Shemesh
+            icon: mdi:water-boiler
+            color: orange
+            grid_options:
+              columns: 6
+            features:
+              - type: toggle
+            card_mod:
+              style: |
+                ha-card {
+                  {% if is_state(config.entity, 'on') %}
+                  background: linear-gradient(145deg, rgba(255,152,0,0.35), rgba(255,152,0,0.06)) !important;
+                  border: 1px solid rgba(255,152,0,0.5) !important;
+                  {% else %}
+                  background: rgba(255,255,255,0.05) !important;
+                  border: 1px solid rgba(255,255,255,0.08) !important;
+                  {% endif %}
+                  border-radius: 22px !important;
+                }
+          - type: tile
+            entity: fan.${HA_AIR_PURIFIER}_air_purifier
+            name: Air Purifier
+            color: teal
+            grid_options:
+              columns: 6
+            features:
+              - type: fan-preset-modes
+                style: dropdown
+            card_mod:
+              style: |
+                ha-card {
+                  {% if is_state(config.entity, 'on') %}
+                  background: linear-gradient(145deg, rgba(0,150,136,0.35), rgba(0,150,136,0.06)) !important;
+                  border: 1px solid rgba(0,150,136,0.5) !important;
+                  {% else %}
+                  background: rgba(255,255,255,0.05) !important;
+                  border: 1px solid rgba(255,255,255,0.08) !important;
+                  {% endif %}
+                  border-radius: 22px !important;
+                }
+
+      # ───────────── Right: safety, maintenance ─────────────
+      - type: grid
+        cards:
+          - type: heading
+            heading: Safety
+            icon: mdi:shield-home
+          - type: custom:mushroom-template-card
+            primary: >-
+              {% set ns = namespace(a=[]) %}
+              {% if is_state('binary_sensor.water_leaks', 'on') %}{% set ns.a = ns.a + ['Water leak'] %}{% endif %}
+              {% if is_state('binary_sensor.smoke_detectors', 'on') %}{% set ns.a = ns.a + ['Smoke'] %}{% endif %}
+              {% if is_state('binary_sensor.moes_co_detector', 'on') %}{% set ns.a = ns.a + ['CO'] %}{% endif %}
+              {{ '⚠ ' ~ ns.a | join(', ') if ns.a else 'All clear' }}
+            secondary: >-
+              CO {{ states('sensor.moes_co_detector_carbon_monoxide') }} ppm ·
+              Door {{ 'open' if is_state('binary_sensor.door_sensor', 'on') else 'closed' }}
+            icon: >-
+              {{ 'mdi:shield-alert' if is_state('binary_sensor.water_leaks', 'on')
+                 or is_state('binary_sensor.smoke_detectors', 'on')
+                 or is_state('binary_sensor.moes_co_detector', 'on') else 'mdi:shield-check' }}
+            icon_color: >-
+              {{ 'red' if is_state('binary_sensor.water_leaks', 'on')
+                 or is_state('binary_sensor.smoke_detectors', 'on')
+                 or is_state('binary_sensor.moes_co_detector', 'on') else 'green' }}
+            fill_container: true
+            grid_options:
+              columns: full
+            card_mod:
+              style: |
+                ha-card {
+                  {% set alert = is_state('binary_sensor.water_leaks', 'on')
+                     or is_state('binary_sensor.smoke_detectors', 'on')
+                     or is_state('binary_sensor.moes_co_detector', 'on') %}
+                  {% set c = '244,67,54' if alert else '76,175,80' %}
+                  background: linear-gradient(120deg, rgba({{ c }},0.40), rgba({{ c }},0.05)) !important;
+                  border: 1px solid rgba({{ c }},0.5) !important;
+                  border-radius: 22px !important;
+                  {% if alert %}animation: pulse 1.5s infinite;{% endif %}
+                }
+                @keyframes pulse {
+                  0%   { box-shadow: 0 0 0 0 rgba(244,67,54,0.7); }
+                  70%  { box-shadow: 0 0 0 14px rgba(244,67,54,0); }
+                  100% { box-shadow: 0 0 0 0 rgba(244,67,54,0); }
+                }
+          - type: tile
+            entity: binary_sensor.living_room_smoke_detector
+            name: Smoke
+            icon: mdi:smoke-detector-variant
+            grid_options:
+              columns: 6
+            card_mod: &alert_tile
+              style: |
+                ha-card {
+                  {% if is_state(config.entity, 'on') %}
+                  background: linear-gradient(145deg, rgba(244,67,54,0.45), rgba(244,67,54,0.10)) !important;
+                  border: 1px solid rgba(244,67,54,0.7) !important;
+                  {% else %}
+                  background: rgba(255,255,255,0.05) !important;
+                  border: 1px solid rgba(255,255,255,0.08) !important;
+                  {% endif %}
+                  border-radius: 22px !important;
+                }
+          - type: tile
+            entity: binary_sensor.moes_co_detector
+            name: CO
+            icon: mdi:molecule-co
+            grid_options:
+              columns: 6
+            card_mod: *alert_tile
+          - type: tile
+            entity: binary_sensor.kitchen_kitchen_water_sensor
+            name: Kitchen
+            grid_options:
+              columns: 6
+            card_mod: *alert_tile
+          - type: tile
+            entity: binary_sensor.bathroom_bathroom_water_sensor
+            name: Bathroom
+            grid_options:
+              columns: 6
+            card_mod: *alert_tile
+          - type: tile
+            entity: binary_sensor.door_sensor
+            name: Front door
+            grid_options:
+              columns: full
+            card_mod:
+              style: |
+                ha-card {
+                  {% if is_state(config.entity, 'on') %}
+                  background: linear-gradient(145deg, rgba(255,193,7,0.35), rgba(255,193,7,0.06)) !important;
+                  border: 1px solid rgba(255,193,7,0.5) !important;
+                  {% else %}
+                  background: rgba(255,255,255,0.05) !important;
+                  border: 1px solid rgba(255,255,255,0.08) !important;
+                  {% endif %}
+                  border-radius: 22px !important;
+                }
+
+          - type: heading
+            heading: Maintenance
+            icon: mdi:wrench
+          - type: tile
+            entity: sensor.${HA_AIR_PURIFIER}_filter_life_level
+            name: Filter life
+            icon: mdi:air-filter
+            color: amber
+            grid_options:
+              columns: 6
+            card_mod:
+              style: |
+                ha-card {
+                  {% set v = states(config.entity) | float(0) %}
+                  {% set c = '244,67,54' if v < 10 else '255,193,7' if v < 30 else '76,175,80' %}
+                  background: linear-gradient(145deg, rgba({{ c }},0.30), rgba({{ c }},0.05)) !important;
+                  border: 1px solid rgba({{ c }},0.45) !important;
+                  border-radius: 22px !important;
+                }
+          - type: tile
+            entity: sensor.${HA_AIR_PURIFIER}_filter_left_time
+            name: Replace filter in
+            icon: mdi:calendar-clock
+            grid_options:
+              columns: 6
+            card_mod:
+              style: |
+                ha-card {
+                  {% set v = states(config.entity) | float(0) %}
+                  {% set c = '244,67,54' if v < 14 else '255,193,7' if v < 30 else '76,175,80' %}
+                  background: linear-gradient(145deg, rgba({{ c }},0.30), rgba({{ c }},0.05)) !important;
+                  border: 1px solid rgba({{ c }},0.45) !important;
+                  border-radius: 22px !important;
+                }
+          - type: tile
+            entity: update.home_assistant_core_update
+            name: Home Assistant
+            icon: mdi:home-assistant
+            color: blue
+            tap_action:
+              action: navigate
+              navigation_path: /config/updates
+            grid_options:
+              columns: full
+            card_mod:
+              style: |
+                ha-card {
+                  {% if is_state(config.entity, 'on') %}
+                  background: linear-gradient(145deg, rgba(33,150,243,0.35), rgba(33,150,243,0.06)) !important;
+                  border: 1px solid rgba(33,150,243,0.5) !important;
+                  {% else %}
+                  background: rgba(255,255,255,0.05) !important;
+                  border: 1px solid rgba(255,255,255,0.08) !important;
+                  {% endif %}
+                  border-radius: 22px !important;
+                }
+          - type: custom:auto-entities
+            card:
+              type: entities
+              title: Low batteries
+              card_mod: *glass
+            filter:
+              include:
+                - attributes:
+                    device_class: battery
+                  state: "< 30"
+              exclude:
+                - entity_id: sensor.*_battery_level
+            sort:
+              method: state
+              numeric: true
+            show_empty: false
+            grid_options:
+              columns: full
